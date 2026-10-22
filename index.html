@@ -64,7 +64,7 @@
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2 text-center">
-                <!-- BOTÓN NUEVO: ATLAS ANATÓMICO -->
+                <!-- BOTÓN ATLAS ANATÓMICO -->
                 <button onclick="openAtlas()" class="px-3 py-1.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 font-bold text-xs rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition border border-emerald-200 dark:border-emerald-800/50 flex items-center gap-1">
                     🧍‍♂️ Atlas Anatómico
                 </button>
@@ -210,7 +210,7 @@
         </div>
     </div>
 
-    <!-- MODAL MODO ESTUDIO (Flashcards) -->
+    <!-- MODAL MODO ESTUDIO -->
     <div id="flashcardModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-4">
         <div class="w-full max-w-lg flex flex-col items-center">
             <div class="w-full flex justify-between items-center mb-4 text-white">
@@ -243,9 +243,7 @@
                 <h2 class="font-bold text-lg flex items-center gap-2">🧍‍♂️ Atlas Anatómico por Sistemas</h2>
                 <button onclick="toggleModal('atlasModal')" class="text-emerald-200 hover:text-white font-bold text-2xl leading-none">&times;</button>
             </div>
-            
             <div class="flex flex-col md:flex-row flex-1 min-h-0">
-                <!-- Panel Lateral de Sistemas -->
                 <div class="w-full md:w-1/3 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-3 overflow-y-auto">
                     <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">Selecciona un sistema:</p>
                     <div class="flex flex-col gap-2">
@@ -259,20 +257,16 @@
                         <button id="btn-atlas-Sentidos" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Sentidos')">👁️ Órganos de los Sentidos</button>
                     </div>
                 </div>
-                
-                <!-- Área de Contenido de Órganos -->
                 <div class="w-full md:w-2/3 p-4 overflow-y-auto bg-slate-50 dark:bg-slate-900">
                     <h3 id="atlas-title" class="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mb-4 border-b border-emerald-200 dark:border-emerald-800 pb-2">Partes y Órganos</h3>
-                    <div id="atlas-content" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <!-- El contenido se inyecta por JS -->
-                    </div>
+                    <div id="atlas-content" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // BASE DE DATOS COMPLETA 
+        // BASE DE DATOS COMPLETA AL 100%
         const rawDatabase = `
 [Admisión, Seguros y Legal]
 Do you have any underlying medical conditions?|¿Tiene alguna condición médica subyacente (enfermedad de base)?
@@ -779,7 +773,7 @@ Desguanzado or Decaído / Weak, fatigued, or lethargic|Desguanzado / Decaído (S
 Soponcio or Patatús / Fainting spell or sudden dizzy spell|Soponcio / Patatús / Yeyo (Desmayo o malestar súbito)
 `;
 
-        const STORAGE_KEY = 'medicalTermsPWA_V1';
+        const STORAGE_KEY = 'medicalTermsAtlasV2'; // Llave nueva forzada para romper el caché
         
         function parseDefaultDB() {
             const lines = rawDatabase.trim().split('\n');
@@ -915,86 +909,20 @@ Soponcio or Patatús / Fainting spell or sudden dizzy spell|Soponcio / Patatús 
         }
         function flipCard() { document.getElementById('fc-card').classList.toggle('flipped'); }
 
-        // DATOS DEL ATLAS ANATÓMICO
         const anatomyData = {
-            "Nervioso": [
-                { en: "Brain", es: "Cerebro" },
-                { en: "Spinal Cord", es: "Médula espinal" },
-                { en: "Nerve", es: "Nervio" },
-                { en: "Brainstem", es: "Tronco encefálico" },
-                { en: "Cerebellum", es: "Cerebelo" }
-            ],
-            "Respiratorio": [
-                { en: "Lungs", es: "Pulmones" },
-                { en: "Trachea / Windpipe", es: "Tráquea" },
-                { en: "Bronchi", es: "Bronquios" },
-                { en: "Diaphragm", es: "Diafragma" },
-                { en: "Alveoli", es: "Alvéolos" },
-                { en: "Larynx / Voice box", es: "Laringe (Cuerdas vocales)" },
-                { en: "Pharynx / Throat", es: "Faringe (Garganta)" }
-            ],
-            "Cardiovascular": [
-                { en: "Heart", es: "Corazón" },
-                { en: "Aorta", es: "Aorta" },
-                { en: "Artery", es: "Arteria" },
-                { en: "Vein", es: "Vena" },
-                { en: "Capillary", es: "Capilar" },
-                { en: "Atrium", es: "Aurícula" },
-                { en: "Ventricle", es: "Ventrículo" }
-            ],
-            "Digestivo": [
-                { en: "Stomach", es: "Estómago" },
-                { en: "Liver", es: "Hígado" },
-                { en: "Gallbladder", es: "Vesícula biliar" },
-                { en: "Pancreas", es: "Páncreas" },
-                { en: "Small Intestine", es: "Intestino delgado" },
-                { en: "Large Intestine / Colon", es: "Intestino grueso / Colon" },
-                { en: "Esophagus / Food pipe", es: "Esófago" },
-                { en: "Appendix", es: "Apéndice" },
-                { en: "Rectum", es: "Recto" }
-            ],
-            "Esquelético": [
-                { en: "Skull", es: "Cráneo" },
-                { en: "Spine / Backbone", es: "Columna vertebral" },
-                { en: "Rib cage", es: "Caja torácica" },
-                { en: "Pelvis", es: "Pelvis" },
-                { en: "Femur / Thigh bone", es: "Fémur" },
-                { en: "Clavicle / Collarbone", es: "Clavícula" },
-                { en: "Scapula / Shoulder blade", es: "Omóplato / Escápula" },
-                { en: "Patella / Kneecap", es: "Rótula / Choquezuela" }
-            ],
-            "Urinario": [
-                { en: "Kidney", es: "Riñón" },
-                { en: "Ureter", es: "Uréter" },
-                { en: "Bladder", es: "Vejiga" },
-                { en: "Urethra", es: "Uretra" }
-            ],
-            "Reproductor": [
-                { en: "Uterus / Womb", es: "Útero / Matriz" },
-                { en: "Ovary", es: "Ovario" },
-                { en: "Fallopian Tube", es: "Trompa de Falopio" },
-                { en: "Cervix", es: "Cuello uterino / Cérvix" },
-                { en: "Prostate", es: "Próstata" },
-                { en: "Testicle", es: "Testículo" }
-            ],
-            "Sentidos": [
-                { en: "Eye", es: "Ojo" },
-                { en: "Cornea", es: "Córnea" },
-                { en: "Retina", es: "Retina" },
-                { en: "Pupil", es: "Pupila" },
-                { en: "Ear", es: "Oído / Oreja" },
-                { en: "Eardrum / Tympanic membrane", es: "Tímpano" },
-                { en: "Cochlea", es: "Cóclea" }
-            ]
+            "Nervioso": [{ en: "Brain", es: "Cerebro" },{ en: "Spinal Cord", es: "Médula espinal" },{ en: "Nerve", es: "Nervio" },{ en: "Brainstem", es: "Tronco encefálico" },{ en: "Cerebellum", es: "Cerebelo" }],
+            "Respiratorio": [{ en: "Lungs", es: "Pulmones" },{ en: "Trachea / Windpipe", es: "Tráquea" },{ en: "Bronchi", es: "Bronquios" },{ en: "Diaphragm", es: "Diafragma" },{ en: "Alveoli", es: "Alvéolos" },{ en: "Larynx / Voice box", es: "Laringe (Cuerdas vocales)" },{ en: "Pharynx / Throat", es: "Faringe (Garganta)" }],
+            "Cardiovascular": [{ en: "Heart", es: "Corazón" },{ en: "Aorta", es: "Aorta" },{ en: "Artery", es: "Arteria" },{ en: "Vein", es: "Vena" },{ en: "Capillary", es: "Capilar" },{ en: "Atrium", es: "Aurícula" },{ en: "Ventricle", es: "Ventrículo" }],
+            "Digestivo": [{ en: "Stomach", es: "Estómago" },{ en: "Liver", es: "Hígado" },{ en: "Gallbladder", es: "Vesícula biliar" },{ en: "Pancreas", es: "Páncreas" },{ en: "Small Intestine", es: "Intestino delgado" },{ en: "Large Intestine / Colon", es: "Intestino grueso / Colon" },{ en: "Esophagus / Food pipe", es: "Esófago" },{ en: "Appendix", es: "Apéndice" },{ en: "Rectum", es: "Recto" }],
+            "Esquelético": [{ en: "Skull", es: "Cráneo" },{ en: "Spine / Backbone", es: "Columna vertebral" },{ en: "Rib cage", es: "Caja torácica" },{ en: "Pelvis", es: "Pelvis" },{ en: "Femur / Thigh bone", es: "Fémur" },{ en: "Clavicle / Collarbone", es: "Clavícula" },{ en: "Scapula / Shoulder blade", es: "Omóplato / Escápula" },{ en: "Patella / Kneecap", es: "Rótula / Choquezuela" }],
+            "Urinario": [{ en: "Kidney", es: "Riñón" },{ en: "Ureter", es: "Uréter" },{ en: "Bladder", es: "Vejiga" },{ en: "Urethra", es: "Uretra" }],
+            "Reproductor": [{ en: "Uterus / Womb", es: "Útero / Matriz" },{ en: "Ovary", es: "Ovario" },{ en: "Fallopian Tube", es: "Trompa de Falopio" },{ en: "Cervix", es: "Cuello uterino / Cérvix" },{ en: "Prostate", es: "Próstata" },{ en: "Testicle", es: "Testículo" }],
+            "Sentidos": [{ en: "Eye", es: "Ojo" },{ en: "Cornea", es: "Córnea" },{ en: "Retina", es: "Retina" },{ en: "Pupil", es: "Pupila" },{ en: "Ear", es: "Oído / Oreja" },{ en: "Eardrum / Tympanic membrane", es: "Tímpano" },{ en: "Cochlea", es: "Cóclea" }]
         };
 
-        function openAtlas() {
-            toggleModal('atlasModal');
-            loadAtlasSystem('Nervioso'); // Carga el sistema nervioso por defecto al abrir
-        }
+        function openAtlas() { toggleModal('atlasModal'); loadAtlasSystem('Nervioso'); }
 
         function loadAtlasSystem(sys) {
-            // Resaltar el botón activo
             document.querySelectorAll('.atlas-btn').forEach(btn => {
                 btn.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-700');
                 btn.classList.add('text-slate-700', 'dark:text-slate-300');
@@ -1002,23 +930,17 @@ Soponcio or Patatús / Fainting spell or sudden dizzy spell|Soponcio / Patatús 
             const activeBtn = document.getElementById('btn-atlas-' + sys);
             activeBtn.classList.remove('text-slate-700', 'dark:text-slate-300');
             activeBtn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-700');
-
-            // Actualizar el título
-            document.getElementById('atlas-title').innerText = \`Órganos del \${activeBtn.innerText.replace(/[^\w\sÁÉÍÓÚáéíóúÑñ]/g, '').trim()}\`;
-
-            // Inyectar el contenido
+            document.getElementById('atlas-title').innerText = `Órganos del ${activeBtn.innerText.replace(/[^\w\sÁÉÍÓÚáéíóúÑñ]/g, '').trim()}`;
             const container = document.getElementById('atlas-content');
-            container.innerHTML = anatomyData[sys].map(item => \`
+            container.innerHTML = anatomyData[sys].map(item => `
                 <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm hover:shadow-md transition">
                     <div class="flex flex-col">
-                        <span class="font-bold text-slate-800 dark:text-white text-base md:text-lg">\${item.en}</span>
-                        <span class="text-slate-600 dark:text-slate-400 text-sm">\${item.es}</span>
+                        <span class="font-bold text-slate-800 dark:text-white text-base md:text-lg">${item.en}</span>
+                        <span class="text-slate-600 dark:text-slate-400 text-sm">${item.es}</span>
                     </div>
-                    <button onclick="speakText('\${item.en.replace(/'/g, "\\\\'")}')" class="p-2 bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-full hover:bg-emerald-200 dark:hover:bg-emerald-800 transition shadow-sm" title="Pronunciar">
-                        🔊
-                    </button>
+                    <button onclick="speakText('${item.en.replace(/'/g, "\\'")}')" class="p-2 bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-full hover:bg-emerald-200 dark:hover:bg-emerald-800 transition shadow-sm">🔊</button>
                 </div>
-            \`).join('');
+            `).join('');
         }
 
         document.addEventListener('keydown', (e) => {
