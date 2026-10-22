@@ -1,0 +1,16 @@
+{
+  "name": "OPI/VRI Pro Suite",
+  "short_name": "Intérprete",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#1e293b",
+  "theme_color": "#1e293b",
+  "description": "Estación de trabajo para interpretación médica telefónica y por video.",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2965/2965306.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
