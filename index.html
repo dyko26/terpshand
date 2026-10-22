@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#1e293b">
     <title>OPI/VRI Pro Suite</title>
-    <!-- Enlace al Manifest para instalación PWA -->
     <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -15,8 +14,6 @@
         } else {
             document.documentElement.classList.remove('dark');
         }
-        
-        // Registro del Service Worker para funcionamiento Offline
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('sw.js').catch(err => console.log('SW falló:', err));
         }
@@ -28,7 +25,6 @@
         .dark ::-webkit-scrollbar-thumb { background: #475569; }
         .btn-scratch { @apply px-1.5 py-0.5 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:bg-blue-50 dark:hover:bg-slate-600 rounded text-[10px] font-semibold text-slate-700 dark:text-slate-200 transition; }
         .btn-sym { @apply px-1.5 py-0.5 bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-200 dark:border-indigo-800/50 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 rounded text-[11px] font-bold text-indigo-800 dark:text-indigo-300 transition; }
-        /* Animación Flashcard */
         .perspective-1000 { perspective: 1000px; }
         .transform-style-3d { transform-style: preserve-3d; }
         .backface-hidden { backface-visibility: hidden; }
@@ -68,6 +64,10 @@
                 </div>
             </div>
             <div class="flex flex-wrap items-center gap-2 text-center">
+                <!-- BOTÓN NUEVO: ATLAS ANATÓMICO -->
+                <button onclick="openAtlas()" class="px-3 py-1.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 font-bold text-xs rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-900/60 transition border border-emerald-200 dark:border-emerald-800/50 flex items-center gap-1">
+                    🧍‍♂️ Atlas Anatómico
+                </button>
                 <button onclick="toggleModal('flashcardModal'); nextFlashcard();" class="px-3 py-1.5 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 font-bold text-xs rounded-lg hover:bg-amber-200 dark:hover:bg-amber-900/60 transition border border-amber-200 dark:border-amber-800/50">
                     🧠 Modo Estudio
                 </button>
@@ -87,8 +87,6 @@
             
             <!-- GLOSARIO (8 cols) -->
             <div class="lg:col-span-8 flex flex-col h-full space-y-3">
-                
-                <!-- Búsqueda y Filtro Anatómico -->
                 <div class="bg-white dark:bg-slate-800 p-3 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 shrink-0">
                     <div class="flex flex-col sm:flex-row gap-2">
                         <div class="relative flex-1">
@@ -100,7 +98,6 @@
                         </select>
                     </div>
                     
-                    <!-- Filtro Anatómico Rápido -->
                     <div class="mt-2 flex flex-wrap gap-1.5">
                         <span class="text-[10px] font-bold text-slate-400 uppercase py-1 px-1">Filtro rápido:</span>
                         <button onclick="setCategory('Neurología y Neurocirugía')" class="px-2 py-1 bg-slate-100 dark:bg-slate-700 rounded text-xs font-semibold hover:bg-blue-100 dark:hover:bg-blue-900 transition">🧠 Cabeza/Neuro</button>
@@ -114,7 +111,6 @@
                     </div>
                 </div>
 
-                <!-- Tabla (Flex-1 para llenar espacio) -->
                 <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex-1 flex flex-col min-h-0">
                     <div class="overflow-y-auto flex-1 relative">
                         <table class="w-full text-left border-collapse">
@@ -133,7 +129,6 @@
 
             <!-- SCRATCHPAD (4 cols) -->
             <div class="lg:col-span-4 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col h-[calc(100vh-8rem)]">
-                
                 <div class="p-2.5 bg-slate-800 dark:bg-slate-950 text-white rounded-t-xl flex justify-between items-center shrink-0">
                     <div class="flex items-center gap-2">
                         <span class="font-bold text-sm">📝 BLOC</span>
@@ -172,7 +167,7 @@
                     <button onclick="wipeNotes()" class="mt-2 w-full py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-lg shadow-sm transition">🗑️ BORRAR NOTAS</button>
                 </div>
 
-                <div class="p-2 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 rounded-b-xl shrink-0">
+                <div class="p-2.5 bg-slate-50 dark:bg-slate-800/80 border-t border-slate-200 dark:border-slate-700 rounded-b-xl shrink-0">
                     <div class="grid grid-cols-2 gap-2 text-xs">
                         <div class="flex items-center bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-600 rounded-lg px-2 py-1">
                             <input type="number" id="kgInput" placeholder="Kg" oninput="convertWeight('kg')" class="w-full bg-transparent focus:outline-none font-bold text-slate-700 dark:text-slate-300">
@@ -190,7 +185,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE PROTOCOLOS (Por Agencia) -->
+    <!-- MODAL DE PROTOCOLOS -->
     <div id="protocolModal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-3xl overflow-hidden border border-slate-200 dark:border-slate-700 flex flex-col">
             <div class="bg-slate-800 dark:bg-slate-950 text-white px-5 py-4 flex justify-between items-center">
@@ -222,44 +217,566 @@
                 <h2 class="font-bold text-xl">🧠 Entrenamiento Interactivo</h2>
                 <button onclick="toggleModal('flashcardModal')" class="text-white hover:text-rose-400 font-bold text-2xl">&times;</button>
             </div>
-            
-            <!-- Tarjeta 3D -->
             <div id="fc-card" class="relative w-full h-64 perspective-1000 cursor-pointer" onclick="flipCard()">
                 <div class="flashcard-inner w-full h-full relative transform-style-3d">
-                    <!-- Frente (Inglés) -->
                     <div class="absolute w-full h-full backface-hidden bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border-2 border-blue-500 flex flex-col items-center justify-center p-6 text-center">
                         <span id="fc-cat" class="absolute top-4 text-xs font-bold text-slate-400 uppercase tracking-widest">Categoría</span>
                         <h3 id="fc-front" class="text-3xl font-extrabold text-slate-800 dark:text-white mt-2">Term</h3>
                         <p class="absolute bottom-4 text-sm text-blue-500 font-semibold animate-pulse">Clic para voltear ⤵</p>
                     </div>
-                    <!-- Dorso (Español) -->
                     <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-blue-600 dark:bg-blue-700 rounded-2xl shadow-2xl border-2 border-blue-400 flex flex-col items-center justify-center p-6 text-center text-white">
                         <h3 id="fc-back" class="text-3xl font-extrabold">Término</h3>
                     </div>
                 </div>
             </div>
-
             <div class="mt-8 flex gap-4 w-full">
-                <button onclick="speakText(document.getElementById('fc-front').innerText)" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition flex justify-center items-center gap-2">
-                    🔊 Escuchar
-                </button>
-                <button onclick="nextFlashcard()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/30">
-                    Siguiente ➔
-                </button>
+                <button onclick="speakText(document.getElementById('fc-front').innerText)" class="flex-1 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-bold transition flex justify-center items-center gap-2">🔊 Escuchar</button>
+                <button onclick="nextFlashcard()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold transition shadow-lg shadow-emerald-600/30">Siguiente ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ATLAS ANATÓMICO -->
+    <div id="atlasModal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-md z-50 flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-slate-50 dark:bg-slate-900 w-full max-w-5xl rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col h-[90vh]">
+            <div class="bg-emerald-700 dark:bg-emerald-900 text-white px-5 py-4 rounded-t-2xl flex justify-between items-center shrink-0">
+                <h2 class="font-bold text-lg flex items-center gap-2">🧍‍♂️ Atlas Anatómico por Sistemas</h2>
+                <button onclick="toggleModal('atlasModal')" class="text-emerald-200 hover:text-white font-bold text-2xl leading-none">&times;</button>
+            </div>
+            
+            <div class="flex flex-col md:flex-row flex-1 min-h-0">
+                <!-- Panel Lateral de Sistemas -->
+                <div class="w-full md:w-1/3 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 p-3 overflow-y-auto">
+                    <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 ml-1">Selecciona un sistema:</p>
+                    <div class="flex flex-col gap-2">
+                        <button id="btn-atlas-Nervioso" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Nervioso')">🧠 Sistema Nervioso</button>
+                        <button id="btn-atlas-Respiratorio" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Respiratorio')">🫁 Sistema Respiratorio</button>
+                        <button id="btn-atlas-Cardiovascular" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Cardiovascular')">🫀 Sist. Cardiovascular</button>
+                        <button id="btn-atlas-Digestivo" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Digestivo')">🥪 Sistema Digestivo</button>
+                        <button id="btn-atlas-Urinario" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Urinario')">💧 Sistema Urinario</button>
+                        <button id="btn-atlas-Reproductor" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Reproductor')">🤰 Sist. Reproductor</button>
+                        <button id="btn-atlas-Esquelético" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Esquelético')">🦴 Sistema Esquelético</button>
+                        <button id="btn-atlas-Sentidos" class="atlas-btn text-left px-3 py-3 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition font-semibold text-slate-700 dark:text-slate-300" onclick="loadAtlasSystem('Sentidos')">👁️ Órganos de los Sentidos</button>
+                    </div>
+                </div>
+                
+                <!-- Área de Contenido de Órganos -->
+                <div class="w-full md:w-2/3 p-4 overflow-y-auto bg-slate-50 dark:bg-slate-900">
+                    <h3 id="atlas-title" class="text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mb-4 border-b border-emerald-200 dark:border-emerald-800 pb-2">Partes y Órganos</h3>
+                    <div id="atlas-content" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- El contenido se inyecta por JS -->
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // PEGA AQUÍ TU BASE DE DATOS COMPLETA (rawDatabase) QUE USAMOS EN LA VERSIÓN ANTERIOR
+        // BASE DE DATOS COMPLETA 
         const rawDatabase = `
 [Admisión, Seguros y Legal]
 Do you have any underlying medical conditions?|¿Tiene alguna condición médica subyacente (enfermedad de base)?
 Have you met your annual deductible?|¿Ya alcanzó su deducible anual?
-Primary Care Physician (PCP)|Médico de atención primaria / Médico de cabecera
 Out-of-pocket maximum|Límite máximo de gastos de su propio bolsillo
 Copayment (Copay) and Coinsurance|Copago y coseguro
-[Sustituye este bloque pegando la base completa de la versión anterior para mantener el límite de texto aquí]
+Primary Care Physician (PCP)|Médico de atención primaria / Médico de cabecera
+We need a prior authorization from your insurance carrier.|Necesitamos una autorización previa de su compañía de seguros.
+Referral to see a specialist|Remisión / Derivación / Orden para ver a un especialista
+In-network vs. Out-of-network provider|Proveedor dentro de la red vs. fuera de la red
+Advance directive / Living will|Directriz médica anticipada / Voluntad anticipada / Testamento vital
+Durable Power of Attorney for Healthcare|Poder notarial duradero para atención médica
+Do Not Resuscitate (DNR) order|Orden de no reanimar (No resucitar)
+Informed consent form|Formulario de consentimiento informado
+HIPAA Notice of Privacy Practices|Aviso de prácticas de privacidad de la ley HIPAA
+Release of medical records / medical information|Autorización para divulgar expedientes médicos / historial clínico
+Worker's compensation claim|Reclamo de compensación laboral (accidentes de trabajo)
+Sliding fee scale discount program|Programa de descuento con escala de tarifas ajustables según ingresos
+Financial assistance / Charity care|Asistencia financiera / Atención médica de beneficencia
+Explanation of Benefits (EOB)|Explicación de beneficios (estado de cuenta del seguro)
+Subscriber / Policyholder and Dependents|Suscriptor / Titular de la póliza y dependientes
+Effective date of coverage|Fecha de entrada en vigor de la cobertura
+Coordination of benefits|Coordinación de beneficios (entre dos seguros)
+Medicaid / Medicare Part A, B, C, D|Medicaid / Medicare Parte A (Hospital), B (Médico), C, D (Recetas)
+Itemized bill / Billing statement|Factura detallada / Estado de cuenta de facturación
+Collection agency / Past due balance|Agencia de cobranza / Saldo vencido
+Legal guardian / Foster parent|Tutor legal / Padre de crianza temporal
+
+[Instrucciones y Examen Físico]
+Please step onto the scale and remove your shoes.|Por favor súbase a la báscula (pesa) y quítese los zapatos.
+Roll up your sleeve so I can take your blood pressure.|Súbase la manga para poder tomarle la presión arterial.
+Take a deep breath in through your mouth and hold it.|Respire profundo por la boca y contenga el aire.
+Exhale slowly / Breathe normally.|Exhale despacio / Respire normalmente.
+Scoot all the way down to the end of the exam table.|Deslícese hasta el borde inferior de la camilla.
+Place your feet in the stirrups and relax your knees.|Coloque los pies en los estribos y relaje las rodillas.
+Undress from the waist up / from the waist down.|Desvístase de la cintura para arriba / de la cintura para abajo.
+Put on this gown with the opening in the back.|Póngase esta bata con la abertura hacia atrás.
+Lie flat on your back (Supine position).|Acuéstese boca arriba (Posición supina).
+Lie flat on your stomach (Prone position).|Acuéstese boca abajo (Posición prona).
+Roll over onto your left side and bend your knees.|Recuéstese sobre su costado izquierdo y doble las rodillas.
+Follow my finger with your eyes without moving your head.|Siga mi dedo con la mirada sin mover la cabeza.
+Squeeze my fingers as hard as you can.|Apriete mis dedos lo más fuerte que pueda.
+Push against my hands with your feet.|Empuje mis manos con sus pies.
+Shrug your shoulders and resist my push.|Encoja los hombros y resista mi empuje.
+Stick out your tongue and say 'Ah'.|Saque la lengua y diga 'Ah'.
+Clench your teeth / Bite down hard.|Apriete los dientes / Muerda fuerte.
+Point with one finger to where it hurts the most.|Señale con un solo dedo dónde le duele más.
+Tell me if you feel tenderness when I press here.|Dígame si siente dolor o sensibilidad cuando presiono aquí.
+We need a midstream clean-catch urine sample.|Necesitamos una muestra de orina limpia de la mitad del chorro.
+Wipe from front to back with the antiseptic towelette.|Límpiese de adelante hacia atrás con la toallita antiséptica.
+Do not eat or drink anything after midnight (NPO / Fasting).|No coma ni beba nada después de la medianoche (En ayunas).
+Remain still and do not talk during the scan.|Permanezca quieto y no hable durante el estudio.
+
+[Síntomas, Dolor y Signos]
+On a scale from 0 to 10, how severe is your pain?|En una escala del 0 al 10, ¿qué tan fuerte es su dolor?
+Sharp / Stabbing / Piercing pain|Dolor agudo / Punzante / Penetrante (como una puñalada)
+Dull ache / Constant aching|Dolor sordo / Dolor continuo y apagado
+Throbbing / Pulsating pain|Dolor pulsátil / Latiente (que late)
+Burning sensation|Sensación de ardor o quemazón
+Shooting / Radiating pain|Dolor fulgurante / Dolor que se irradia o se corre
+Cramping / Colicky pain|Dolor tipo cólico / Retortijón / Calambre
+Tightness / Pressure / Squeezing in the chest|Opresión / Presión / Sensación de apretón en el pecho
+Numbness and tingling (Pins and needles / Paresthesia)|Entumecimiento (adormecimiento) y hormigueo
+Lightheadedness / Feeling faint (Presyncope)|Sensación de desmayo / Aturdimiento / Desvanecimiento
+Dizziness / Room spinning (Vertigo)|Mareo / Vértigo (sentir que todo da vueltas)
+Shortness of breath / Winded (Dyspnea)|Falta de aire / Dificultad para respirar / Ahogo
+Shortness of breath when lying flat (Orthopnea)|Falta de aire al estar acostado boca arriba (Ortopnea)
+Chills, shivering, and night sweats|Escalofríos, temblores y sudoración nocturna
+Low-grade fever vs. High fever|Febrícula (calentura leve) vs. Fiebre alta
+Fatigue, lethargy, and malaise|Fatiga, letargo (decaimiento) y malestar general
+Unexplained weight loss / Loss of appetite (Anorexia)|Pérdida de peso inexplicable / Falta de apetito (Inapetencia)
+Swelling in the ankles and feet (Peripheral edema)|Hinchazón en los tobillos y pies (Edema periférico)
+Itching / Pruritus|Picazón / Comezón / Prurito
+Bruising easily (Ecchymosis)|Moretones fáciles (Hematomas / Equimosis)
+Hoarseness / Raspy voice|Ronquera / Voz áspera o afónica
+Swollen lymph nodes (Swollen glands)|Ganglios linfáticos inflamados (Bolitas en el cuello/axilas)
+Stiffness and reduced range of motion|Rigidez y disminución del rango de movimiento
+Restlessness / Agitation|Inquietud / Agitación
+
+[Anatomía General y Órganos]
+Skull, Scalp, Forehead, and Temple|Cráneo, cuero cabelludo, frente y sien
+Jaw (Mandible), Cheekbone, and Chin|Mandíbula (quijada), pómulo y barbilla (mentón)
+Windpipe (Trachea) and Voice box (Larynx)|Tráquea y laringe (cuerdas vocales)
+Food pipe (Esophagus) and Throat (Pharynx)|Esófago y garganta (faringe)
+Collarbone (Clavicle) and Shoulder blade (Scapula)|Clavícula y omóplato (escápula)
+Breastbone (Sternum) and Rib cage|Esternón y caja torácica (costillas)
+Spine, Vertebrae, and Tailbone (Coccyx)|Columna vertebral, vértebras y cóccix (rabadilla)
+Armpit (Axilla), Upper arm, Forearm, and Wrist|Axila, brazo, antebrazo y muñeca
+Knuckles, Palm, Thumb, and Fingernails|Nudillos, palma, pulgar y uñas de las manos
+Hip, Groin (Inguinal area), and Buttocks|Cadera, ingle (zona inguinal) y glúteos (nalgas)
+Thigh, Kneecap (Patella), Shin, and Calf|Muslo, rótula (choquezuela), espinilla (tibia) y pantorrilla (batata)
+Ankle, Heel, Arch of the foot, and Toes|Tobillo, talón, arco del pie y dedos de los pies
+Lungs, Bronchial tubes, and Diaphragm|Pulmones, bronquios y diafragma
+Heart, Aorta, Arteries, Veins, and Capillaries|Corazón, aorta, arterias, venas y capilares
+Stomach, Small intestine, and Large intestine (Colon)|Estómago, intestino delgado e intestino grueso (colon)
+Liver, Gallbladder, and Bile ducts|Hígado, vesícula biliar y conductos biliares (vías biliares)
+Pancreas, Spleen, and Appendix|Páncreas, bazo y apéndice
+Kidneys, Ureters, Urinary bladder, and Urethra|Riñones, uréteres, vejiga urinaria y uretra
+Adrenal glands, Thyroid gland, and Pituitary gland|Glándulas suprarrenales, glándula tiroides y glándula pituitaria (hipófisis)
+Uterus (Womb), Ovaries, Fallopian tubes, and Cervix|Útero (matriz), ovarios, trompas de Falopio y cuello uterino (cérvix)
+Prostate gland, Testicles, and Scrotum|Glándula prostática (próstata), testículos y escroto
+Brain, Spinal cord, and Sciatic nerve|Cerebro, médula espinal y nervio ciático
+Bone marrow, Cartilage, Tendons, and Ligaments|Médula ósea, cartílago, tendones y ligamentos
+
+[Procedimientos y Cirugías]
+Magnetic Resonance Imaging (MRI) with and without contrast|Resonancia magnética (IRM) con y sin medio de contraste
+Computed Tomography (CT scan / CAT scan)|Tomografía computarizada (TAC)
+Positron Emission Tomography (PET scan)|Tomografía por emisión de positrones (PET)
+Ultrasound / Sonogram|Ultrasonido / Ecografía / Sonograma
+Fluoroscopy / Barium swallow|Fluoroscopia / Trago de bario (Esofagograma)
+Bone density scan (DEXA scan)|Densitometría ósea (Prueba de densidad mineral ósea)
+Laparoscopic cholecystectomy (Gallbladder removal)|Colecistectomía laparoscópica (Extirpación de la vesícula biliar)
+Appendectomy (Appendix removal)|Apendicectomía (Extirpación del apéndice)
+Inguinal / Umbilical / Hiatal hernia repair (Herniorrhaphy)|Reparación de hernia inguinal / umbilical / hiatal (Herniorrafia)
+Total hysterectomy (Uterus removal)|Histerectomía total (Extirpación de la matriz / útero)
+Total knee arthroplasty (Knee replacement)|Artroplastia total de rodilla (Reemplazo total de rodilla)
+Total hip replacement|Reemplazo total de cadera (Artroplastia de cadera)
+Exploratory laparotomy vs. Laparoscopy|Laparotomía exploratoria (cirugía abierta) vs. Laparoscopia
+Upper GI Endoscopy (EGD - Esophagogastroduodenoscopy)|Endoscopia digestiva alta (Esofagogastroduodenoscopia)
+Colonoscopy and Polypectomy|Colonoscopia y polipectomía (extirpación de pólipos)
+Endoscopic Retrograde Cholangiopancreatography (ERCP)|Colangiopancreatografía retrógrada endoscópica (CPRE)
+Bronchoscopy and Bronchoalveolar lavage|Broncoscopia y lavado broncoalveolar
+Cystoscopy (Bladder scope)|Cistoscopia (endoscopia de la vejiga)
+Thoracentesis (Fluid drainage from lungs)|Toracocentesis (Drenaje de líquido de la cavidad pleural/pulmón)
+Paracentesis (Fluid drainage from abdomen)|Paracentesis (Drenaje de líquido de la cavidad abdominal)
+Lumbar puncture (Spinal tap)|Punción lumbar (extracción de líquido cefalorraquídeo)
+Bone marrow aspiration and biopsy|Aspiración y biopsia de médula ósea
+Fine needle aspiration biopsy (FNA)|Biopsia por aspiración con aguja fina (BAAF)
+Incision and Drainage (I&D) of an abscess|Incisión y drenaje de un absceso
+Wound debridement (Removing dead tissue)|Desbridamiento de herida (limpieza de tejido muerto)
+Skin graft / Flap surgery|Injerto de piel / Cirugía de colgajo
+Endotracheal intubation and Mechanical ventilation|Intubación endotraqueal y ventilación mecánica (respirador artificial)
+Tracheostomy (Trach tube)|Traqueostomía (cánula de traqueostomía)
+Central venous catheter (Central line) / PICC line|Catéter venoso central (Vía central) / Catéter PICC (vía central de inserción periférica)
+Port-a-Cath (Implanted venous access port)|Reservorio venoso subcutáneo (Puerto para quimioterapia)
+Gastrostomy tube (G-tube / PEG tube) for tube feeding|Sonda de gastrostomía (Sonda PEG) para alimentación enteral
+Nasogastric tube (NG tube)|Sonda nasogástrica
+Foley catheter (Indwelling urinary catheter)|Sonda de Foley (Sonda vesical permanente para orinar)
+Colostomy and Ileostomy (Ostomy bag)|Colostomía e ileostomía (Bolsa de ostomía)
+Transurethral Resection of the Prostate (TURP)|Resección transuretral de la próstata (RTUP)
+Extracorporeal Shock Wave Lithotripsy (ESWL)|Litotricia extracorpórea por ondas de choque (pulverizar piedras)
+Ventriculoperitoneal (VP) shunt|Derivación ventriculoperitoneal (válvula cerebral)
+Carotid endarterectomy|Endarterectomía carotídea (limpieza de la arteria carótida)
+Blood transfusion and Crossmatching|Transfusión de sangre y pruebas de compatibilidad cruzada
+
+[Medicamentos y Farmacología]
+Prescription medication vs. Over-the-counter (OTC)|Medicamento con receta médica vs. de venta libre (sin receta)
+Generic name vs. Brand name|Nombre genérico vs. Nombre comercial (de marca)
+Dosage, strength, and frequency|Dosis, concentración (miligramos) y frecuencia
+Take once daily / twice daily (BID) / three times daily (TID)|Tomar una vez al día / dos veces al día / tres veces al día
+Take as needed (PRN) for pain or nausea|Tomar según sea necesario (cuando lo necesite) para dolor o náuseas
+Take on an empty stomach / Take with food or milk|Tomar en ayunas (estómago vacío) / Tomar con comida o leche
+Swallow whole; do not crush, chew, or break the tablet.|Tragar entera; no triturar, masticar ni partir la pastilla.
+Taper off the dose gradually; do not stop abruptly.|Reducir la dosis gradualmente; no suspender de golpe.
+Side effects and Adverse drug reactions|Efectos secundarios y reacciones adversas al medicamento
+Drowsiness, dizziness, or dry mouth|Somnolencia (sueño), mareo o boca seca
+Refill / Out of refills|Resurtido (relleno de receta) / Sin resurtidos disponibles
+Prior authorization required by pharmacy|Autorización previa requerida por la farmacia
+Sublingual (under the tongue) / Topical / Intravenous (IV)|Sublingual (debajo de la lengua) / Tópico (en la piel) / Intravenoso
+Intramuscular (IM) / Subcutaneous (Sub-Q) injection|Inyección intramuscular / Inyección subcutánea
+Eye drops (Ophthalmic) / Ear drops (Otic) / Nasal spray|Gotas para los ojos (oftálmicas) / Gotas para los oídos (óticas) / Aerosol nasal
+Ointment, Cream, Lotion, and Transdermal patch|Ungüento (pomada), crema, loción y parche transdérmico
+acetaminophen (Tylenol) — Fever reducer and pain reliever|Acetaminofén / Paracetamol (Tylenol) — Analgésico y antipirético
+ibuprofen (Advil, Motrin) & naproxen (Aleve) — NSAIDs|Ibuprofeno y Naproxeno — Antiinflamatorios no esteroideos (AINE)
+aspirin (Ecotrin) & clopidogrel (Plavix) — Antiplatelets|Aspirina y Clopidogrel (Plavix) — Antiagregantes plaquetarios
+apixaban (Eliquis), rivaroxaban (Xarelto), warfarin (Coumadin)|Apixabán, Rivaroxabán, Warfarina — Anticoagulantes (diluyentes de la sangre)
+enoxaparin (Lovenox) & heparin — Injectable blood thinners|Enoxaparina (Lovenox) y Heparina — Anticoagulantes inyectables
+lisinopril, enalapril, ramipril — ACE inhibitors (Blood pressure)|Lisinopril, Enalapril, Ramipril — Inhibidores de la ECA (presión alta)
+losartan (Cozaar) & valsartan (Diovan) — ARBs (Blood pressure)|Losartán y Valsartán — Antagonistas de receptores de angiotensina
+amlodipine (Norvasc) & diltiazem (Cardizem) — Calcium channel blockers|Amlodipino y Diltiazem — Bloqueadores de los canales de calcio
+metoprolol (Lopressor, Toprol XL) & carvedilol (Coreg) — Beta-blockers|Metoprolol y Carvedilol — Betabloqueadores (corazón y presión)
+furosemide (Lasix) & hydrochlorothiazide (HCTZ) — Diuretics (Water pills)|Furosemida (Lasix) e Hidroclorotiazida — Diuréticos (pastillas para orinar/retención de líquidos)
+spironolactone (Aldactone) — Potassium-sparing diuretic|Espironolactona — Diurético ahorrador de potasio
+atorvastatin (Lipitor) & rosuvastatin (Crestor) — Statins (Cholesterol)|Atorvastatina (Lipitor) y Rosuvastatina (Crestor) — Estatinas (colesterol)
+metformin (Glucophage) — First-line oral diabetes medication|Metformina — Medicamento oral para la diabetes
+semaglutide (Ozempic, Wegovy) & tirzepatide (Mounjaro)|Semaglutida (Ozempic) y Tirzepatida — Agonistas GLP-1 (diabetes y peso)
+insulin glargine (Lantus) & insulin lispro (Humalog)|Insulina glargina (Lantus, acción prolongada) e Insulina lispro (Humalog, acción rápida)
+levothyroxine (Synthroid) — Thyroid hormone replacement|Levotiroxina (Synthroid) — Hormona tiroidea para hipotiroidismo
+omeprazole (Prilosec) & pantoprazole (Protonix) — PPIs (Acid reflux)|Omeprazol y Pantoprazol — Inhibidores de la bomba de protones (protector gástrico)
+famotidine (Pepcid) & calcium carbonate (Tums) — Antacids|Famotidina (Pepcid) y Carbonato de calcio — Antiácidos
+ondansetron (Zofran) & promethazine (Phenergan) — Antiemetics (Nausea)|Ondansetrón (Zofran) y Prometazina — Antieméticos (contra náuseas y vómitos)
+docusate sodium (Colace) & polyethylene glycol (MiraLAX) — Stool softeners|Docusato de sodio (ablandador de heces) y Polietilenglicol (MiraLAX, laxante)
+albuterol (ProAir, Ventolin) — Rescue bronchodilator inhaler|Albuterol / Salbutamol — Inhalador broncodilatador de rescate
+fluticasone/salmeterol (Advair) & budesonide/formoterol (Symbicort)|Advair y Symbicort — Inhaladores de mantenimiento con corticosteroide
+montelukast (Singulair) & cetirizine (Zyrtec) — Allergy and Asthma|Montelukast y Cetirizina — Medicamentos para alergias y asma
+prednisone & methylprednisolone (Medrol) — Oral corticosteroids|Prednisona y Metilprednisolona — Corticosteroides (esteroides para inflamación)
+amoxicillin, augmentin, azithromycin (Z-Pak), ciprofloxacin (Cipro)|Amoxicilina, Augmentin, Azitromicina, Ciprofloxacino — Antibióticos
+cephalexin (Keflex), doxycycline, sulfamethoxazole/trimethoprim (Bactrim)|Cefalexina, Doxiciclina, Trimetoprima/Sulfametoxazol (Bactrim) — Antibióticos
+fluconazole (Diflucan) & nystatin — Antifungals|Fluconazol y Nistatina — Antimicóticos (contra hongos)
+acyclovir & valacyclovir (Valtrex) — Antivirals|Aciclovir y Valaciclovir — Antivirales (herpes/culebrilla)
+gabapentin (Neurontin) & pregabalin (Lyrica) — Nerve pain / Seizures|Gabapentina y Pregabalina (Lyrica) — Dolor neuropático (de nervios) y convulsiones
+cyclobenzaprine (Flexeril) & methocarbamol (Robaxin) — Muscle relaxers|Ciclobenzaprina y Metocarbamol — Relajantes musculares
+tramadol (Ultram), hydrocodone/acetaminophen (Norco), oxycodone (Percocet)|Tramadol, Hidrocodona (Norco), Oxicodona (Percocet) — Analgésicos opioides
+morphine, hydromorphone (Dilaudid), fentanyl — Strong hospital opioids|Morfina, Hidromorfona (Dilaudid), Fentanilo — Opioides potentes
+naloxone (Narcan) & buprenorphine/naloxone (Suboxone)|Naloxona (Narcan, revertir sobredosis) y Suboxone (tratamiento de adicción)
+sertraline (Zoloft), escitalopram (Lexapro), fluoxetine (Prozac) — SSRIs|Sertralina, Escitalopram, Fluoxetina — Antidepresivos ISRS
+duloxetine (Cymbalta) & bupropion (Wellbutrin) — Antidepressants|Duloxetina (Cymbalta) y Bupropión (Wellbutrin) — Antidepresivos
+alprazolam (Xanax), clonazepam (Klonopin), lorazepam (Ativan) — Benzodiazepines|Alprazolam, Clonazepam, Lorazepam — Benzodiacepinas (ansiolíticos/sedantes)
+zolpidem (Ambien) & trazodone — Sleep aids (Insomnia)|Zolpidem (Ambien) y Trazodona — Medicamentos para el insomnio
+tamsulosin (Flomax) & finasteride (Proscar) — Enlarged prostate|Tamsulosina (Flomax) y Finasterida — Para la próstata agrandada
+allopurinol (Zyloprim) & colchicine — Gout medications|Alopurinol y Colchicina — Medicamentos para la gota (ácido úrico)
+
+[Laboratorio y Patología]
+Complete Blood Count (CBC) with differential|Hemograma completo (Biometría hemática) con conteo diferencial
+Comprehensive Metabolic Panel (CMP) / Basic Metabolic Panel (BMP)|Panel metabólico completo / Panel metabólico básico
+Lipid panel (Total cholesterol, LDL, HDL, Triglycerides)|Perfil lipídico (Colesterol total, colesterol malo LDL, bueno HDL, triglicéridos)
+Fasting blood glucose (Fasting blood sugar)|Glucosa en sangre en ayunas (Azúcar en ayunas)
+Hemoglobin A1c (HbA1c - 3-month average blood sugar)|Hemoglobina glucosilada A1c (Promedio de azúcar de 3 meses)
+Thyroid Stimulating Hormone (TSH) and Free T4|Hormona estimulante de la tiroides (TSH) y T4 libre
+Liver Function Tests (LFTs - AST, ALT, Bilirubin, Alkaline phosphatase)|Pruebas de función hepática (Transaminasas AST, ALT, bilirrubina, fosfatasa alcalina)
+Kidney function (Blood Urea Nitrogen - BUN, Creatinine, eGFR)|Función renal (Nitrógeno ureico en sangre BUN, creatinina, tasa de filtración glomerular)
+Coagulation panel (PT / INR / PTT)|Panel de coagulación (Tiempo de protrombina PT / INR)
+Red Blood Cells (RBC), White Blood Cells (WBC), and Platelets|Glóbulos rojos (eritrocitos), glóbulos blancos (leucocitos) y plaquetas
+Hemoglobin and Hematocrit|Hemoglobina y hematocrito
+Electrolytes (Sodium, Potassium, Chloride, Bicarbonate, Calcium)|Electrolitos (Sodio, potasio, cloruro, bicarbonato, calcio)
+Urinalysis (UA) and Urine culture with sensitivity|Análisis de orina (Examen general de orina - EGO) y urocultivo con antibiograma
+Stool test for occult blood (Fecal Occult Blood Test - FOBT) and Ova & Parasites|Examen de sangre oculta en heces y coproparasitoscópico (parásitos)
+Blood culture, Throat culture, and Wound culture|Hemocultivo (cultivo de sangre), cultivo de garganta y cultivo de herida
+Prostate-Specific Antigen (PSA)|Antígeno prostático específico (PSA)
+Erythrocyte Sedimentation Rate (ESR) and C-Reactive Protein (CRP)|Velocidad de sedimentación globular (VSG) y Proteína C reactiva (marcadores de inflamación)
+Troponin and B-type Natriuretic Peptide (BNP)|Troponina y Péptido natriurético tipo B (marcadores cardíacos)
+Arterial Blood Gas (ABG) and Lactic acid|Gasometría arterial (Gases en sangre) y ácido láctico
+Toxicology screen (Urine drug screen)|Examen toxicológico (Prueba de detección de drogas en orina)
+
+[Cardiología y Vascular]
+High blood pressure (Hypertension) vs. Low blood pressure (Hypotension)|Presión arterial alta (Hipertensión) vs. Presión arterial baja (Hipotensión)
+Coronary Artery Disease (CAD) and Atherosclerosis (Clogged arteries)|Enfermedad de las arterias coronarias y aterosclerosis (arterias tapadas/endurecidas)
+Myocardial Infarction (Heart attack) vs. Cardiac arrest|Infarto agudo de miocardio (Ataque al corazón) vs. Paro cardíaco
+Angina pectoris (Stable and Unstable chest pain)|Angina de pecho (Dolor de pecho estable e inestable)
+Congestive Heart Failure (CHF) and Ejection fraction|Insuficiencia cardíaca congestiva y fracción de eyección
+Atrial Fibrillation (A-fib) and Atrial Flutter|Fibrilación auricular y aleteo auricular (arritmias)
+Bradycardia (Slow heart rate) and Tachycardia (Fast heart rate)|Bradicardia (latidos lentos) y Taquicardia (latidos rápidos)
+Heart murmur and Heart valve disease (Mitral regurgitation, Aortic stenosis)|Soplo cardíaco y valvulopatía (insuficiencia mitral, estenosis aórtica)
+Electrocardiogram (EKG / ECG - 12-lead)|Electrocardiograma de 12 derivaciones
+Echocardiogram (Transthoracic TTE / Transesophageal TEE)|Ecocardiograma (Ultrasonido del corazón transtorácico / transesofágico)
+Holter monitor (24-48 hour continuous heart monitor)|Monitor Holter (registro continuo del corazón por 24-48 horas)
+Exercise treadmill stress test / Nuclear stress test|Prueba de esfuerzo en caminadora / Prueba de esfuerzo nuclear
+Cardiac catheterization and Coronary angiogram|Cateterismo cardíaco y angiografía coronaria
+Percutaneous Coronary Intervention (PCI / Angioplasty with Stent)|Angioplastia coronaria con colocación de stent (malla arterial)
+Coronary Artery Bypass Graft (CABG - Open-heart bypass surgery)|Cirugía de derivación coronaria (Bypass de arteria coronaria a corazón abierto)
+Pacemaker and Implantable Cardioverter-Defibrillator (ICD)|Marcapasos y Desfibrilador cardioversor implantable (DAI)
+Electrical cardioversion and Catheter ablation|Cardioversión eléctrica y ablación con catéter
+Deep Vein Thrombosis (DVT - Blood clot in the leg)|Trombosis venosa profunda (TVP - coágulo de sangre en la pierna)
+Peripheral Artery Disease (PAD) and Claudication|Enfermedad arterial periférica y claudicación (dolor en piernas al caminar)
+Abdominal Aortic Aneurysm (AAA) and Varicose veins|Aneurisma de la aorta abdominal y venas varicosas (várices)
+Pericarditis and Endocarditis|Pericarditis (inflamación del saco del corazón) y Endocarditis (infección de válvulas)
+
+[Neurología y Neurocirugía]
+Cerebrovascular Accident (CVA / Stroke - Ischemic vs. Hemorrhagic)|Accidente cerebrovascular (ACV / Derrame cerebral - Isquémico por coágulo vs. Hemorrágico por sangrado)
+Transient Ischemic Attack (TIA / Mini-stroke)|Ataque isquémico transitorio (AIT / Mini derrame cerebral)
+Facial drooping, arm weakness, and slurred speech (Dysarthria)|Caída de un lado de la cara, debilidad en el brazo y habla arrastrada (Disartria)
+Aphasia (Difficulty speaking or understanding language)|Afasia (Dificultad para hablar o comprender el lenguaje)
+Seizure / Convulsion and Epilepsy (Grand mal / Tonic-clonic vs. Absence)|Convulsión / Ataque y Epilepsia (Tónico-clónica generalizada vs. Crisis de ausencia)
+Electroencephalogram (EEG - Brain wave test)|Electroencefalograma (Estudio de las ondas cerebrales)
+Electromyography (EMG) and Nerve Conduction Study (NCS)|Electromiografía y Estudio de conducción nerviosa
+Migraine headache with aura vs. Tension headache vs. Cluster headache|Migraña (jaqueca) con aura vs. Cefalea tensional vs. Cefalea en racimos
+Concussion and Traumatic Brain Injury (TBI)|Conmoción cerebral y Traumatismo craneoencefálico (TCE)
+Subdural hematoma and Brain aneurysm|Hematoma subdural (sangrado en el cerebro) y Aneurisma cerebral
+Multiple Sclerosis (MS) and Amyotrophic Lateral Sclerosis (ALS)|Esclerosis múltiple y Esclerosis lateral amiotrófica (ELA)
+Parkinson's disease and Essential tremor|Enfermedad de Parkinson y Temblor esencial
+Alzheimer's disease and Vascular dementia|Enfermedad de Alzheimer y Demencia vascular
+Peripheral neuropathy (Diabetic nerve damage)|Neuropatía periférica (daño a los nervios, común en diabetes)
+Bell's palsy (Facial nerve paralysis) and Trigeminal neuralgia|Parálisis de Bell (parálisis facial) y Neuralgia del trigémino
+Sciatica and Radiculopathy (Pinched nerve)|Ciática y Radiculopatía (nervio pellizcado o comprimido)
+Meningitis and Encephalitis|Meningitis y Encefalitis (infección de las membranas o del cerebro)
+Guillain-Barré syndrome and Myasthenia gravis|Síndrome de Guillain-Barré y Miastenia grave
+
+[Gastroenterología y Hepatología]
+Gastroesophageal Reflux Disease (GERD / Acid reflux / Heartburn)|Enfermedad por reflujo gastroesofágico (ERGE / Reflujo ácido / Acidez o agruras)
+Peptic ulcer disease and Helicobacter pylori (H. pylori) infection|Úlcera péptica (gástrica/duodenal) e infección por la bacteria Helicobacter pylori
+Gastritis and Gastroenteritis (Stomach flu)|Gastritis y Gastroenteritis (infección estomacal)
+Dysphagia (Difficulty swallowing) and Odynophagia (Painful swallowing)|Disfagia (dificultad para tragar) y Odinofagia (dolor al tragar)
+Nausea, Retching (Dry heaves), and Vomiting (Emesis)|Náuseas, arcadas secas y vómitos (émesis)
+Vomiting blood (Hematemesis) / Coffee-ground emesis|Vómito con sangre (Hematemesis) / Vómito con aspecto de borra de café
+Bowel movement (BM), Constipation, and Diarrhea|Evacuación intestinal (obrar / hacer del baño), estreñimiento y diarrea
+Black, tarry stools (Melena) vs. Bright red blood in stool (Hematochezia)|Heces negras y alquitranadas (Melena) vs. Sangre roja brillante en las heces (Rectorragia)
+Bloating, Abdominal distension, Belching (Burping), and Flatulence|Inflamación abdominal, distensión, eructos y flatulencia (gases)
+Irritable Bowel Syndrome (IBS) vs. Inflammatory Bowel Disease (IBD)|Síndrome del intestino irritable (Colon irritable) vs. Enfermedad inflamatoria intestinal
+Crohn's disease and Ulcerative colitis|Enfermedad de Crohn y Colitis ulcerosa
+Celiac disease (Gluten intolerance) and Diverticulitis / Diverticulosis|Enfermedad celíaca (intolerancia al gluten) y Diverticulitis / Diverticulosis
+Gallstones (Cholelithiasis) and Cholecystitis (Gallbladder inflammation)|Cálculos biliares (piedras en la vesícula) y Colecistitis (inflamación de la vesícula)
+Pancreatitis and Appendicitis|Pancreatitis (inflamación del páncreas) y Apendicitis
+Fatty liver disease (Steatosis), Hepatitis (A, B, C), and Cirrhosis|Hígado graso (esteatosis hepática), Hepatitis y Cirrosis hepática
+Jaundice (Yellowing of skin and eyes) and Ascites (Fluid in belly)|Ictericia (piel y ojos amarillos) y Ascitis (líquido acumulado en el abdomen)
+Hemorrhoids (Internal/External), Anal fissure, and Rectal prolapse|Hemorroides (almorranas), fisura anal y prolapso rectal
+Bowel obstruction (Ileus) and Bowel preparation (Prep for colonoscopy)|Obstrucción intestinal y Preparación intestinal (purga para colonoscopia)
+
+[Ortopedia, Reumatología y Fisioterapia]
+Fracture: Closed (Simple), Open (Compound), Comminuted, and Hairline (Stress)|Fractura: Cerrada (simple), Abierta (expuesta), Conminuta (en varios fragmentos) y Fisura
+Dislocation (Subluxation) of a joint|Dislocación (luxación / zafadura) de una articulación
+Sprain (Torn/stretched ligament) vs. Strain (Torn/pulled muscle or tendon)|Esguince (torcedura de ligamento) vs. Distensión o desgarro muscular/tendinoso
+Anterior Cruciate Ligament (ACL) tear and Meniscus tear|Desgarro del ligamento cruzado anterior (LCA) y rotura de menisco
+Rotator cuff tear and Frozen shoulder (Adhesive capsulitis)|Desgarro del manguito rotador y hombro congelado (capsulitis adhesiva)
+Carpal tunnel syndrome, Trigger finger, and Ganglion cyst|Síndrome del túnel carpiano, dedo en gatillo y quiste sinovial (ganglión)
+Tennis elbow (Lateral epicondylitis) and Bursitis / Tendinitis|Codo de tenista (epicondilitis) y Bursitis / Tendinitis
+Plantar fasciitis and Heel spur|Fascitis plantar y espolón calcáneo (espolón en el talón)
+Herniated disc (Slipped/bulging disc) and Spinal stenosis|Hernia discal (disco herniado/abombado) y Estenosis espinal (estrechamiento de la columna)
+Scoliosis, Kyphosis, and Degenerative disc disease|Escoliosis (desviación de columna), Cifosis y Enfermedad degenerativa de disco
+Osteoarthritis (Wear-and-tear arthritis) vs. Rheumatoid arthritis|Osteoartritis (artrosis por desgaste) vs. Artritis reumatoide
+Osteoporosis and Osteopenia (Low bone density)|Osteoporosis y Osteopenia (baja densidad en los huesos)
+Gout (Uric acid crystals in joints), Lupus (SLE), and Fibromyalgia|Gout (gota por ácido úrico), Lupus eritematoso sistémico y Fibromialgia
+Cast (Fiberglass/Plaster), Splint, Sling, and Orthopedic boot (Walking boot)|Yeso (fibra de vidrio), férula (tablilla), cabestrillo y bota ortopédica
+Crutches, Walker, Cane, and Wheelchair|Muletas, andadera (andador), bastón y silla de ruedas
+Weight-bearing status: Non-weight-bearing vs. Weight-bearing as tolerated|Apoyo de peso: Sin apoyar el pie (sin carga de peso) vs. Apoyar según lo tolere
+Physical Therapy (PT) and Occupational Therapy (OT)|Fisioterapia (Terapia física) y Terapia ocupacional
+Cortisone shot (Steroid injection) and Joint aspiration|Inyección de cortisona (infiltración) y aspiración articular
+
+[Ginecología, Obstetricia y Neonatal]
+First day of your Last Menstrual Period (LMP)|Primer día de su última menstruación (regla / período)
+Estimated Due Date (EDD) and Gestational age|Fecha probable de parto (fecha de alivio) y edad gestacional
+Heavy menstrual bleeding (Menorrhagia) and Painful periods (Dysmenorrhea)|Sangrado menstrual abundante (menorragia) y cólicos menstruales fuertes (dismenorrea)
+Spotting between periods and Postmenopausal bleeding|Manchado entre reglas y sangrado posmenopáusico
+Hot flashes, Night sweats, and Hormone Replacement Therapy (HRT)|Bochornos (sofocos), sudores nocturnos y terapia de reemplazo hormonal
+Pap smear (Cervical cytology) and Human Papillomavirus (HPV) test|Papanicolaou (citología cervical) y prueba del virus del papiloma humano (VPH)
+Colposcopy, Cervical biopsy, and LEEP procedure|Colposcopia, biopsia de cuello uterino y procedimiento LEEP (escisión electroquirúrgica)
+Pelvic examination with a speculum and Bimanual exam|Examen pélvico con espéculo y examen bimanual
+Transvaginal ultrasound and Screening / Diagnostic Mammogram|Ultrasonido transvaginal (endovaginal) y Mamografía de detección / diagnóstica
+Uterine fibroids (Myomas), Ovarian cysts, and Endometriosis|Fibromas uterinos (miomas), quistes ováricos y endometriosis
+Polycystic Ovary Syndrome (PCOS) and Pelvic Inflammatory Disease (PID)|Síndrome de ovario poliquístico (SOP) y Enfermedad inflamatoria pélvica
+Vaginal discharge, Yeast infection (Candidiasis), and Bacterial vaginosis|Flujo vaginal, infección por hongos (candidiasis) y vaginosis bacteriana
+Contraception: Birth control pills, Intrauterine Device (IUD), Implant (Nexplanon), Depo shot|Anticoncepción: Pastillas anticonceptivas, Dispositivo intrauterino (DIU), Implante subdérmico, Inyección
+Tubal ligation (Getting tubes tied) and Vasectomy|Ligadura de trompas (operarse para no tener hijos) y Vasectomía
+Prenatal vitamins with Folic acid and Morning sickness|Vitaminas prenatales con ácido fólico y náuseas matutinas del embarazo
+Ectopic pregnancy (Tubal pregnancy) and Miscarriage (Spontaneous abortion)|Embarazo ectópico (fuera de la matriz) y Aborto espontáneo (pérdida del embarazo)
+Dilation and Curettage (D&C)|Dilatación y legrado (raspado uterino)
+Gestational diabetes and Preeclampsia (High blood pressure in pregnancy)|Diabetes gestacional y Preeclampsia (presión alta durante el embarazo)
+Placenta previa, Placental abruption, and Amniotic fluid|Placenta previa, desprendimiento de placenta y líquido amniótico
+Breech position (Baby feet/bottom first) vs. Head down (Cephalic)|Posición de nalgas (sentado) vs. De cabeza (cefálico)
+Braxton Hicks contractions (False labor) vs. True labor contractions|Contracciones de Braxton Hicks (falso trabajo de parto) vs. Contracciones de parto
+Water breaking (Rupture of membranes) and Mucus plug|Romper fuente (ruptura de membranas) y tapón mucoso
+Cervical dilation and Effacement (Thinning of the cervix)|Dilatación cervical y borramiento (adelgazamiento del cuello uterino)
+Labor induction (Pitocin) and Epidural anesthesia|Inducción del parto (oxitocina/Pitocin) y anestesia epidural (la raquia)
+Vaginal delivery, Episiotomy, Forceps/Vacuum extraction, and Cesarean section (C-section)|Parto vaginal, episiotomía (corte), parto con fórceps/ventosa y Cesárea
+Postpartum hemorrhage, Lochia, and Postpartum depression|Hemorragia posparto, loquios (sangrado posparto) y depresión posparto
+Breastfeeding (Nursing), Latching on, Breast pump, and Mastitis|Lactancia materna (dar pecho), agarre del pezón, extractor de leche (tiraleches) y mastitis
+Newborn screening (Heel prick test), Apgar score, and NICU|Tamizaje neonatal (prueba del talón), puntaje Apgar y UCIN (Cuidados Intensivos Neonatales)
+
+[Pediatría y Vacunación]
+Well-child visit / Check-up and Growth chart percentiles|Consulta del niño sano (control pediátrico) y percentiles de la tabla de crecimiento
+Developmental milestones (Rolling over, sitting up, crawling, walking, talking)|Hitos del desarrollo (darse vuelta, sentarse, gatear, caminar, hablar)
+Soft spot on the baby's head (Fontanelle) and Cradle cap|Mollera (fontanela) y costra láctea
+Jaundice of the newborn and Phototherapy (Bili lights)|Ictericia del recién nacido y fototerapia (luces para bajar la bilirrubina)
+Colic, Spit-up (Reflux), Burping the baby, and Infant formula|Cólico del lactante, regurgitación, sacarle los gases al bebé y leche de fórmula
+Diaper rash, Thrush (White patches in mouth), and Teething|Rozadura del pañal (escaldadura), algodoncillo (candidiasis oral) y dentición (salida de dientes)
+Ear infection (Otitis media), Ear tubes (Tympanostomy tubes), and Swimmer's ear|Infección de oído (otitis media), tubos de ventilación en los oídos y oído de nadador
+Croup (Barking cough), Bronchiolitis, and Respiratory Syncytial Virus (RSV)|Crup (tos perruna), bronquiolitis y Virus Sincitial Respiratorio (VSR)
+Hand, Foot, and Mouth disease, Fifth disease, and Roseola|Enfermedad de manos, pies y boca, eritema infeccioso (quinta enfermedad) y roséola
+Chickenpox (Varicella), Measles, Mumps, and Rubella (German measles)|Varicela, sarampión, paperas (parotiditis) y rubéola
+Whooping cough (Pertussis), Scarlet fever, and Strep throat|Tos ferina, escarlatina e infección de garganta por estreptococos
+Head lice (Nits), Pinworms, and Ringworm (Tinea)|Piojos (liendres), oxiuros (lombrices intestinales) y tiña
+Febrile seizure and Reyes syndrome|Convulsión febril (por fiebre alta) y síndrome de Reye
+Attention-Deficit/Hyperactivity Disorder (ADHD) and Autism Spectrum Disorder (ASD)|Trastorno por déficit de atención e hiperactividad (TDAH) y Trastorno del espectro autista (TEA)
+Immunization schedule / Vaccination record (Shot record)|Esquema de vacunación / Cartilla o tarjeta de vacunas
+DTaP / Tdap vaccine (Diphtheria, Tetanus, Pertussis)|Vacuna DTaP / Tdap (Difteria, Tétanos y Tos ferina)
+MMR vaccine, Varicella vaccine, Polio (IPV), Hepatitis B, and Rotavirus|Vacuna triple vírica (MMR), varicela, polio, hepatitis B y rotavirus
+
+[Neumología y Respiratorio]
+Upper Respiratory Infection (URI / Common cold)|Infección de las vías respiratorias superiores (Resfriado común)
+Asthma, Bronchospasm, and Peak flow meter|Asma, broncoespasmo y medidor de flujo máximo
+Chronic Obstructive Pulmonary Disease (COPD), Emphysema, and Chronic bronchitis|Enfermedad Pulmonar Obstructiva Crónica (EPOC), enfisema y bronquitis crónica
+Pneumonia, Pleurisy (Pleuritic chest pain), and Pleural effusion (Fluid around lungs)|Neumonía (pulmonía), pleuresía y derrame pleural (líquido alrededor de los pulmones)
+Pulmonary Embolism (PE - Blood clot in the lungs)|Embolia pulmonar (coágulo de sangre en los pulmones)
+Pneumothorax (Collapsed lung) and Atelectasis|Neumotorax (pulmón colapsado) y atelectasia
+Tuberculosis (TB), PPD skin test, and QuantiFERON blood test|Tuberculosis, prueba cutánea de tuberculina (PPD) y prueba de sangre QuantiFERON
+Wheezing, Stridor, Crackles (Rales), and Rhonchi|Sibilancias (silbidos en el pecho), estridor, estertores (crepitantes) y roncus
+Coughing up blood (Hemoptysis) vs. Coughing up phlegm/sputum (Productive cough)|Toser sangre (hemoptisis) vs. Tos con flema/esputo (tos productiva)
+Dry, hacking cough vs. Lingering cough|Tos seca e irritativa vs. Tos persistente
+Pulse oximeter (Oxygen saturation level) and Supplemental oxygen (Nasal cannula)|Oxímetro de pulso (nivel de saturación de oxígeno) y oxígeno suplementario (cánula nasal)
+Nebulizer breathing treatment and Inhaler with spacer|Tratamiento con nebulizador (mascarilla de vapor) e inhalador con cámara espaciadora
+Pulmonary Function Tests (PFTs / Spirometry)|Pruebas de función pulmonar (Espirometría)
+Obstructive Sleep Apnea (OSA), Sleep study (Polysomnography), and CPAP / BiPAP machine|Apnea obstructiva del sueño, estudio del sueño (polisomnografía) y máquina CPAP / BiPAP
+
+[Endocrinología y Metabolismo]
+Type 1 Diabetes, Type 2 Diabetes, and Prediabetes (Insulin resistance)|Diabetes tipo 1, Diabetes tipo 2 y Prediabetes (resistencia a la insulina)
+Hyperglycemia (High blood sugar) vs. Hypoglycemia (Low blood sugar)|Hiperglucemia (azúcar alta) vs. Hipoglucemia (azúcar baja / bajón de azúcar)
+Diabetic Ketoacidosis (DKA) and Diabetic peripheral neuropathy|Cetoacidosis diabética y neuropatía periférica diabética
+Diabetic retinopathy and Diabetic foot ulcer|Retinopatía diabética (daño en la vista) y úlcera de pie diabético
+Glucometer (Blood glucose meter), Test strips, and Lancets (Fingerstick)|Glucómetro (medidor de azúcar), tiras reactivas y lancetas (pinchazo en el dedo)
+Continuous Glucose Monitor (CGM) and Insulin pump|Monitor continuo de glucosa (sensor) y bomba de insulina
+Hypothyroidism (Underactive thyroid / Hashimoto's) and Goiter|Hipotiroidismo (tiroides lenta) y bocio (agrandamiento de la tiroides)
+Hyperthyroidism (Overactive thyroid / Graves' disease) and Thyroid nodules|Hipertiroidismo (tiroides acelerada) y nódulos tiroideos
+Adrenal insufficiency (Addison's disease) and Cushing's syndrome|Insuficiencia suprarrenal y síndrome de Cushing
+Metabolic syndrome, Obesity, and Bariatric surgery (Gastric bypass / Sleeve)|Síndrome metabólico, obesidad y cirugía bariátrica (bypass gástrico / manga gástrica)
+
+[Urología y Nefrología]
+Urinary Tract Infection (UTI) and Bladder infection (Cystitis)|Infección de las vías urinarias (IVU / mal de orín) e infección de vejiga (cistitis)
+Kidney infection (Pyelonephritis) and Flank pain|Infección renal (pielonefritis) y dolor en el costado/espalda baja (flanco)
+Burning or pain when urinating (Dysuria) and Blood in the urine (Hematuria)|Ardor o dolor al orinar (disuria) y sangre en la orina (hematuria)
+Urinary frequency, Urgency, Nocturia (Waking up to pee), and Hesitancy|Micción frecuente, urgencia urinaria, nicturia (levantarse de noche a orinar) y dificultad para iniciar el chorro
+Urinary incontinence (Stress vs. Urge) and Urinary retention (Inability to empty bladder)|Incontinencia urinaria (escape de orina) y retención urinaria (no poder vaciar la vejiga)
+Kidney stones (Renal calculi / Nephrolithiasis) and Ureteral stent|Cálculos renales (piedras en los riñones) y catéter doble J (stent ureteral)
+Acute Kidney Injury (AKI) and Chronic Kidney Disease (CKD / End-Stage Renal Disease)|Lesión renal aguda e Insuficiencia renal crónica (enfermedad renal terminal)
+Hemodialysis, Peritoneal dialysis, and Arteriovenous (AV) fistula / graft|Hemodiálisis, diálisis peritoneal y fístula o injerto arteriovenoso
+Benign Prostatic Hyperplasia (BPH / Enlarged prostate) and Prostatitis|Hiperplasia prostática benigna (próstata agrandada) y prostatitis
+Erectile dysfunction (ED), Testicular torsion, Varicocele, and Hydrocele|Disfunción eréctil, torsión testicular, varicocele e hidrocele
+
+[Oncología y Hematología]
+Benign tumor (Non-cancerous) vs. Malignant tumor (Cancerous)|Tumor benigno (no canceroso) vs. Tumor maligno (canceroso)
+Primary cancer site, Metastasis (Cancer has spread), and Stage (I, II, III, IV)|Sitio primario del cáncer, metástasis (el cáncer se ha extendido) y etapa/estadio
+Biopsy pathology report, Tumor markers, and Lymph node involvement|Reporte de patología de la biopsia, marcadores tumorales y afectación de ganglios linfáticos
+Chemotherapy (Infusion cycles), Immunotherapy, and Targeted therapy|Quimioterapia (ciclos de infusión), inmunoterapia y terapia dirigida
+Radiation therapy (External beam / Brachytherapy)|Radioterapia (externa / braquiterapia interna)
+Remission (Partial or Complete), Recurrence (Relapse), and Prognosis|Remisión (parcial o completa), recurrencia (recaída) y pronóstico
+Palliative care (Symptom management) and Hospice care (End-of-life care)|Cuidados paliativos (control de síntomas) y cuidados de hospicio (para pacientes terminales)
+Leukemia, Lymphoma (Hodgkin / Non-Hodgkin), and Multiple myeloma|Leucemia (cáncer en la sangre), linfoma y mieloma múltiple
+Iron-deficiency anemia, Sickle cell anemia, and Vitamin B12 deficiency|Anemia por deficiencia de hierro (ferropénica), anemia drepanocítica (células falciformes) y falta de B12
+Thrombocytopenia (Low platelets), Neutropenia (Low white blood cells), and Hemophilia|Trombocitopenia (plaquetas bajas), neutropenia (defensas bajas) y hemofilia
+
+[Salud Mental, Psiquiatría y Adicciones]
+Major Depressive Disorder (MDD) and Persistent sadness / Loss of interest (Anhedonia)|Trastorno depresivo mayor y tristeza persistente / pérdida de interés (anhedonia)
+Generalized Anxiety Disorder (GAD), Panic attack, and Phobias|Trastorno de ansiedad generalizada, ataque de pánico y fobias
+Bipolar disorder (Manic and Depressive episodes) and Mood swings|Trastorno bipolar (episodios maníacos y depresivos) y cambios bruscos de humor
+Post-Traumatic Stress Disorder (PTSD), Flashbacks, and Nightmares|Trastorno de estrés postraumático (TEPT), recuerdos invasivos y pesadillas
+Obsessive-Compulsive Disorder (OCD) and Intrusive thoughts|Trastorno obsesivo-compulsivo (TOC) y pensamientos intrusivos
+Schizophrenia, Psychosis, Delusions, and Auditory/Visual hallucinations|Esquizofrenia, psicosis, delirios y alucinaciones auditivas o visuales (escuchar voces o ver cosas)
+Suicidal ideation (Thoughts of self-harm) and Homicidal ideation|Ideación suicida (pensamientos de quitarse la vida o hacerse daño) e ideación homicida
+Do you have a plan or intent to hurt yourself or anyone else?|¿Tiene algún plan o intención de hacerse daño a sí mismo o a otra persona?
+Eating disorders: Anorexia nervosa, Bulimia, and Binge eating|Trastornos alimenticios: Anorexia nerviosa, bulimia y trastorno por atracón
+Cognitive Behavioral Therapy (CBT), Counseling, and Support group|Terapia cognitivo-conductual, consejería psicológica y grupo de apoyo
+Inpatient psychiatric hospitalization (Voluntary vs. Involuntary hold / 5150)|Hospitalización psiquiátrica (ingreso voluntario vs. retención involuntaria)
+Substance Use Disorder, Alcoholism, Drug addiction, and Overdose|Trastorno por consumo de sustancias, alcoholismo, drogadicción y sobredosis
+Withdrawal symptoms (Delirium tremens, tremors, sweating) and Detoxification (Detox)|Síntomas de abstinencia (temblores, sudoración) y desintoxicación (Rehabilitación)
+
+[Oftalmología y Optometría]
+Visual acuity test (Snellen eye chart) and Refraction test (Prescription glasses)|Prueba de agudeza visual (tabla optométrica) y examen de refracción (graduación de lentes)
+Nearsightedness (Myopia), Farsightedness (Hyperopia), Astigmatism, and Presbyopia|Miopía (ver mal de lejos), hipermetropía (ver mal de cerca), astigmatismo y presbicia (vista cansada)
+Dilated eye exam, Pupil, Cornea, Retina, Macula, and Optic nerve|Examen de fondo de ojo con pupila dilatada, pupila, córnea, retina, mácula y nervio óptico
+Cataracts and Cataract surgery with Intraocular Lens (IOL) implant|Cataratas y cirugía de cataratas con implante de lente intraocular
+Glaucoma and Intraocular pressure (Eye pressure test / Tonometry)|Glaucoma y presión intraocular (prueba de presión del ojo / tonometría)
+Macular degeneration, Retinal detachment, and Diabetic retinopathy|Degeneración macular, desprendimiento de retina y retinopatía diabética
+Floaters (Spots/cobwebs in vision) and Flashes of light (Photopsia)|Moscas volantes (manchitas o telarañas en la vista) y destellos de luz
+Conjunctivitis (Pink eye), Stye (Hordeolum), Chalazion, and Blepharitis|Conjuntivitis, orzuelo (perrilla en el ojo), chalazión y blefaritis (inflamación del párpado)
+Dry eye syndrome, Artificial tears, Watery eyes, and Photophobia (Sensitivity to light)|Síndrome de ojo seco, lágrimas artificiales, lagrimeo y fotofobia (sensibilidad a la luz)
+Double vision (Diplopia), Blurred vision, and Blindness / Vision loss|Visión doble (diplopía), visión borrosa y ceguera / pérdida de la vista
+Pterygium (Surfer's eye / Fleshy growth on eye) and Corneal abrasion (Scratched eye)|Pterigión (carnosidad en el ojo) y abrasión corneal (rasguño en la córnea)
+
+[Otorrinolaringología (ENT) y Audiología]
+Sinusitis (Sinus infection), Nasal congestion (Stuffy nose), and Runny nose (Rhinorrhea)|Sinusitis, congestión nasal (nariz tapada) y escurrimiento nasal (rinorrea / moqueo)
+Post-nasal drip, Deviated septum, Nasal polyps, and Nosebleed (Epistaxis)|Goteo posnasal, tabique desviado, pólipos nasales y sangrado nasal (epistaxis)
+Tonsillitis, Enlarged adenoids, Tonsillectomy, and Adenoidectomy|Amigdalitis (anginas inflamadas), adenoides agrandadas, amigdalectomía y adenoidectomía
+Earwax (Cerumen) impaction and Ear irrigation (Flushing the ear)|Tapón de cerumen (cera acumulada en el oído) y lavado de oído
+Ruptured eardrum (Tympanic membrane perforation)|Tímpano perforado (ruptura de la membrana timpánica)
+Vertigo, Labyrinthitis, Meniere's disease, and Epley maneuver|Vértigo, laberintitis, enfermedad de Ménière y maniobra de Epley
+Hearing loss (Sensorineural vs. Conductive), Audiogram, Hearing aid, and Cochlear implant|Pérdida auditiva (sordera), audiometría (audiograma), audífono (aparato para sordera) e implante coclear
+
+[Dermatología y Heridas]
+Skin rash, Hives (Urticaria), Blister, Pustule, and Cyst|Sarpullido (erupción cutánea), ronchas (urticaria), ampolla (vejiga), pústula y quiste
+Eczema (Atopic dermatitis), Contact dermatitis, and Psoriasis|Eccema (dermatitis atópica), dermatitis de contacto y psoriasis
+Cellulitis (Bacterial skin infection), Abscess, Boil (Furuncle), and MRSA|Celulitis infecciosa (infección bacteriana de la piel), absceso, forúnculo (nacido) y estafilococo resistente
+Shingles (Herpes zoster), Cold sore (Fever blister), and Scabies|Culebrilla (herpes zóster), fuego labial (herpes labial) y sarna (escabiosis)
+Fungal infection: Athlete's foot (Tinea pedis), Jock itch, and Nail fungus (Onychomycosis)|Infección por hongos: Pie de atleta, tiña inguinal y hongos en las uñas (onicomicosis)
+Mole (Nevus), Skin tag, Wart, Actinic keratosis, and Cryotherapy (Liquid nitrogen)|Lunar (nevo), verruga blanda (acrocordón), mezquino (verruga), queratosis y crioterapia (quemar con frío)
+Melanoma, Basal cell carcinoma, Squamous cell carcinoma, and Mohs surgery|Melanoma, carcinoma basocelular, carcinoma espinocelular y cirugía de Mohs (cáncer de piel)
+Pressure ulcer (Bedsore / Decubitus ulcer), Venous ulcer, and Wound care dressing|Úlcera por presión (llaga o escara por estar encamado), úlcera venosa y curación/vendaje de heridas
+Sterile gauze, Adhesive bandage, Compression wrap, and Negative pressure wound therapy (Wound VAC)|Gasa estéril, venda adhesiva, vendaje compresivo y terapia de presión negativa (bomba de vacío)
+
+[Odontología y Maxilofacial]
+Toothache, Tooth decay (Cavity / Caries), Plaque, and Tartar (Calculus)|Dolor de muelas, caries dental (picadura), placa bacteriana y sarro dental
+Gum disease: Gingivitis, Periodontitis, Bleeding gums, and Receding gums|Enfermedad de las encías: Gingivitis, periodontitis, sangrado de encías y encías retraídas
+Dental abscess, Root canal treatment (Endodontics), and Tooth extraction (Pulling a tooth)|Absceso dental (postemilla/flemón), tratamiento de conducto (endodoncia) y extracción dental (sacar una muela)
+Dental filling, Crown (Cap), Bridge, Dental implant, and Dentures (False teeth)|Empaste (relleno/calza), corona dental, puente, implante dental y dentadura postiza (placa)
+Wisdom teeth (Third molars), Impacted tooth, and Dry socket|Muelas del juicio (terceros molares), muela impactada y alveolitis seca
+Temporomandibular Joint (TMJ) disorder and Teeth grinding (Bruxism)|Trastorno de la articulación temporomandibular (ATM) y rechinar los dientes (bruxismo)
+
+[Urgencias, Trauma y Toxicología]
+Emergency Room (ER) triage, Vital signs, and Trauma bay|Triaje (clasificación) de urgencias, signos vitales y sala de choque (trauma)
+Laceration (Deep cut), Puncture wound, Abrasion (Scrape), and Contusion (Bruise)|Laceración (cortada profunda), herida punzante, abrasión (raspón) y contusión (golpe/moretón)
+First-degree, Second-degree (Blistering), and Third-degree (Full-thickness) burns|Quemaduras de primer grado, segundo grado (con ampollas) y tercer grado (profundas)
+Smoke inhalation, Carbon monoxide poisoning, and Poison Control Center|Inhalación de humo, intoxicación por monóxido de carbono y Centro de Control de Envenenamientos
+Anaphylaxis (Severe allergic reaction), Throat swelling, and Epinephrine auto-injector (EpiPen)|Anafilaxia (reacción alérgica grave), cierre de la garganta y autoinyector de epinefrina (EpiPen)
+Whiplash (Neck strain from car crash), Airbag deployment, and Seatbelt injury|Latigazo cervical (esguince de cuello por choque), activación de bolsas de aire y lesión por cinturón
+Internal bleeding, Hemorrhagic shock, and Sepsis (Bloodstream infection)|Sangrado interno (hemorragia interna), choque hemorrágico y sepsis (infección generalizada en la sangre)
+Heat exhaustion, Heat stroke, Dehydration, and Hypothermia / Frostbite|Agotamiento por calor, golpe de calor (insolación), deshidratación e hipotermia / congelación
+Animal bite, Rabies vaccine, and Tetanus booster shot|Mordedura de animal, vacuna antirrábica y vacuna de refuerzo contra el tétanos
+Cardiopulmonary Resuscitation (CPR), Defibrillator, and Intensive Care Unit (ICU)|Reanimación cardiopulmonar (RCP), desfibrilador y Unidad de Cuidados Intensivos (UCI / Terapia intensiva)
+
+[Regionalismos y Coloquialismos Médicos]
+Empacho / Indigestion or gastrointestinal blockage|Empacho (Indigestión, pesadez estomacal o bloqueo gastrointestinal)
+Mal de orín / Urinary tract infection or dysuria|Mal de orín (Infección urinaria o ardor al orinar)
+Culebrilla / Shingles (Herpes zoster)|Culebrilla (Herpes zóster)
+Perrilla / Stye on the eyelid|Perrilla (Orzuelo en el párpado)
+Algodoncillo / Oral thrush (Candidiasis)|Algodoncillo (Candidiasis oral en bebés)
+Anginas / Tonsils or Tonsillitis|Anginas (Amígdalas o amigdalitis)
+Aire / Muscle spasm or sudden localized pain|Un aire / Punzada (Espasmo muscular o dolor muscular repentino)
+Caída de la mollera / Sunken fontanelle (Dehydration in infants)|Caída de la mollera (Fontanela hundida en bebés, signo de deshidratación)
+Susto / Panic attack or acute emotional shock|Susto (Crisis de ansiedad o choque emocional agudo)
+Agruras / Heartburn or acid reflux|Agruras / Acidez (Reflujo gastroesofágico)
+Almorranas / Hemorrhoids|Almorranas (Hemorroides)
+Nacido or Grano enterrado / Boil, furuncle, or skin abscess|Nacido / Divieso (Forúnculo o absceso en la piel)
+Mezquino / Common wart|Mezquino (Verruga común)
+Jiote or Empeine / Ringworm or dry skin patch|Jiote / Empeine (Tiña o parche de piel seca/eccema)
+Goma or Cruda / Hangover|Goma / Cruda / Resaca (Malestar por consumo de alcohol)
+Chorrillo or Soltura / Diarrhea (Loose stools)|Chorrillo / Soltura de estómago (Diarrea)
+Obrar or Hacer del cuerpo / To have a bowel movement|Obrar / Hacer del cuerpo (Evacuar el intestino / Defecar)
+Romper fuente / Water breaking (Rupture of membranes)|Romper fuente (Ruptura de la bolsa amniótica)
+Fecha de alivio / Due date (Delivery date)|Fecha de alivio / Dar a luz (Fecha probable de parto)
+Cuarentena / Postpartum recovery period (6 weeks)|La cuarentena (Período de recuperación posparto)
+Matriz / Uterus (Womb)|La matriz (El útero)
+Choquezuela or Rótula / Kneecap (Patella)|Choquezuela (Rótula de la rodilla)
+Rabadilla / Tailbone (Coccyx)|Rabadilla (Cóccix)
+Batata or Pantorrilla / Calf of the leg|Batata / Camote (Pantorrilla)
+Carraspera / Throat clearing or scratchy throat|Carraspera (Picazón o aspereza en la garganta)
+Desguanzado or Decaído / Weak, fatigued, or lethargic|Desguanzado / Decaído (Sin fuerzas, fatigado o letárgico)
+Soponcio or Patatús / Fainting spell or sudden dizzy spell|Soponcio / Patatús / Yeyo (Desmayo o malestar súbito)
 `;
 
         const STORAGE_KEY = 'medicalTermsPWA_V1';
@@ -277,8 +794,7 @@ Copayment (Copay) and Coinsurance|Copago y coseguro
                     parsed.push({ cat: currentCat, en: en.trim(), es: es.trim() });
                 }
             }
-            return parsed.length > 0 ? parsed : [{cat: "General", en: "Sample", es: "Muestra"}]; 
-            // NOTA: Para producción, asegúrate de pegar la lista completa en rawDatabase.
+            return parsed; 
         }
 
         let medicalTerms = JSON.parse(localStorage.getItem(STORAGE_KEY)) || parseDefaultDB();
@@ -291,17 +807,43 @@ Copayment (Copay) and Coinsurance|Copago y coseguro
             categories.forEach(cat => filterSelect.innerHTML += `<option value="${cat}">${cat}</option>`);
         }
 
-        const badgeColors = { "Neurología y Neurocirugía": "bg-purple-100 text-purple-800", "Cardiología y Vascular": "bg-rose-100 text-rose-800" }; // Agrega los demás
+        const badgeColors = { 
+            "Admisión, Seguros y Legal": "bg-slate-200 text-slate-800",
+            "Instrucciones y Examen Físico": "bg-yellow-100 text-yellow-800",
+            "Síntomas, Dolor y Signos": "bg-red-100 text-red-800",
+            "Anatomía General y Órganos": "bg-emerald-100 text-emerald-800",
+            "Procedimientos y Cirugías": "bg-lime-100 text-lime-800",
+            "Medicamentos y Farmacología": "bg-indigo-100 text-indigo-800",
+            "Laboratorio y Patología": "bg-violet-100 text-violet-800",
+            "Cardiología y Vascular": "bg-rose-100 text-rose-800",
+            "Neurología y Neurocirugía": "bg-purple-100 text-purple-800",
+            "Gastroenterología y Hepatología": "bg-orange-100 text-orange-800",
+            "Ortopedia, Reumatología y Fisioterapia": "bg-stone-200 text-stone-800",
+            "Ginecología, Obstetricia y Neonatal": "bg-pink-100 text-pink-800",
+            "Pediatría y Vacunación": "bg-teal-100 text-teal-800",
+            "Neumología y Respiratorio": "bg-cyan-100 text-cyan-800",
+            "Endocrinología y Metabolismo": "bg-amber-100 text-amber-800",
+            "Urología y Nefrología": "bg-blue-100 text-blue-800",
+            "Oncología y Hematología": "bg-zinc-300 text-zinc-900",
+            "Salud Mental, Psiquiatría y Adicciones": "bg-fuchsia-100 text-fuchsia-800",
+            "Oftalmología y Optometría": "bg-sky-100 text-sky-800",
+            "Otorrinolaringología (ENT) y Audiología": "bg-green-100 text-green-800",
+            "Dermatología y Heridas": "bg-rose-50 text-rose-700",
+            "Odontología y Maxilofacial": "bg-cyan-50 text-cyan-700",
+            "Urgencias, Trauma y Toxicología": "bg-red-200 text-red-900",
+            "Regionalismos y Coloquialismos Médicos": "bg-amber-200 text-amber-900" 
+        };
 
         function renderTable(termsToRender) {
             const tbody = document.getElementById('tableBody');
             document.getElementById('segmentCount').innerText = termsToRender.length;
             if (termsToRender.length === 0) { tbody.innerHTML = `<tr><td colspan="3" class="py-8 text-center text-slate-400">Sin resultados.</td></tr>`; return; }
             tbody.innerHTML = termsToRender.map((term) => {
+                const bClass = badgeColors[term.cat] || "bg-slate-200 text-slate-800";
                 const safeEn = term.en.replace(/"/g, '&quot;'), escapedEnSpeech = term.en.replace(/'/g, "\\'");
                 return `
                     <tr class="hover:bg-blue-50/50 dark:hover:bg-slate-700/50">
-                        <td class="py-2 px-3 align-top"><span class="inline-block text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600 bg-slate-100 text-slate-700 dark:bg-transparent dark:text-slate-300">${term.cat.substring(0,25)}</span></td>
+                        <td class="py-2 px-3 align-top"><span class="inline-block text-[10px] font-bold px-1.5 py-0.5 rounded border border-slate-200 dark:border-slate-600 ${bClass} dark:bg-transparent dark:text-slate-300">${term.cat.substring(0,25)}</span></td>
                         <td class="py-2 px-3 text-slate-900 dark:text-slate-100 font-semibold align-top">${term.en} <button onclick="speakText('${escapedEnSpeech}')" class="ml-1 text-slate-400 hover:text-blue-500">🔊</button></td>
                         <td class="py-2 px-3 text-slate-700 dark:text-slate-300 align-top border-l border-slate-100 dark:border-slate-700/50">${term.es}</td>
                     </tr>
@@ -323,7 +865,6 @@ Copayment (Copay) and Coinsurance|Copago y coseguro
         function clearSearch() { document.getElementById('searchInput').value = ''; filterTerms(); document.getElementById('searchInput').focus(); }
         function setCategory(cat) { document.getElementById('categoryFilter').value = cat; filterTerms(); }
 
-        // MÚLTIPLES AGENCIAS
         const agencyScripts = {
             "Konnect CX": "Hello, thank you for calling. My name is Dykembel, interpreter ID [ID]. I will be your Spanish interpreter today. How may I help you?",
             "MultilingualInt": "Hello, my name is Dykembel, ID [ID]. I will be the Spanish interpreter. Please speak in short pauses. Go ahead.",
@@ -337,7 +878,6 @@ Copayment (Copay) and Coinsurance|Copago y coseguro
             document.getElementById('script-intro').innerText = agencyScripts[agency];
         }
 
-        // SCRATCHPAD & UTILIDADES
         const pad = document.getElementById('scratchpad');
         function insertNote(text) { const start=pad.selectionStart, end=pad.selectionEnd; pad.value=pad.value.substring(0,start)+text+pad.value.substring(end); pad.selectionStart=pad.selectionEnd=start+text.length; pad.focus(); saveScratchpad(); }
         function saveScratchpad() { sessionStorage.setItem('callNotesPWA', pad.value); }
@@ -363,7 +903,6 @@ Copayment (Copay) and Coinsurance|Copago y coseguro
         function speakText(text) { if('speechSynthesis' in window){ window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = 'en-US'; u.rate = 0.85; window.speechSynthesis.speak(u); } }
         function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
 
-        // MODO ESTUDIO (Flashcards)
         let currentFlashcard = {};
         function nextFlashcard() {
             document.getElementById('fc-card').classList.remove('flipped');
@@ -372,9 +911,115 @@ Copayment (Copay) and Coinsurance|Copago y coseguro
                 document.getElementById('fc-cat').innerText = currentFlashcard.cat;
                 document.getElementById('fc-front').innerText = currentFlashcard.en;
                 document.getElementById('fc-back').innerText = currentFlashcard.es;
-            }, 150); // Pequeño retraso para que no cambie el texto mientras se voltea de regreso
+            }, 150);
         }
         function flipCard() { document.getElementById('fc-card').classList.toggle('flipped'); }
+
+        // DATOS DEL ATLAS ANATÓMICO
+        const anatomyData = {
+            "Nervioso": [
+                { en: "Brain", es: "Cerebro" },
+                { en: "Spinal Cord", es: "Médula espinal" },
+                { en: "Nerve", es: "Nervio" },
+                { en: "Brainstem", es: "Tronco encefálico" },
+                { en: "Cerebellum", es: "Cerebelo" }
+            ],
+            "Respiratorio": [
+                { en: "Lungs", es: "Pulmones" },
+                { en: "Trachea / Windpipe", es: "Tráquea" },
+                { en: "Bronchi", es: "Bronquios" },
+                { en: "Diaphragm", es: "Diafragma" },
+                { en: "Alveoli", es: "Alvéolos" },
+                { en: "Larynx / Voice box", es: "Laringe (Cuerdas vocales)" },
+                { en: "Pharynx / Throat", es: "Faringe (Garganta)" }
+            ],
+            "Cardiovascular": [
+                { en: "Heart", es: "Corazón" },
+                { en: "Aorta", es: "Aorta" },
+                { en: "Artery", es: "Arteria" },
+                { en: "Vein", es: "Vena" },
+                { en: "Capillary", es: "Capilar" },
+                { en: "Atrium", es: "Aurícula" },
+                { en: "Ventricle", es: "Ventrículo" }
+            ],
+            "Digestivo": [
+                { en: "Stomach", es: "Estómago" },
+                { en: "Liver", es: "Hígado" },
+                { en: "Gallbladder", es: "Vesícula biliar" },
+                { en: "Pancreas", es: "Páncreas" },
+                { en: "Small Intestine", es: "Intestino delgado" },
+                { en: "Large Intestine / Colon", es: "Intestino grueso / Colon" },
+                { en: "Esophagus / Food pipe", es: "Esófago" },
+                { en: "Appendix", es: "Apéndice" },
+                { en: "Rectum", es: "Recto" }
+            ],
+            "Esquelético": [
+                { en: "Skull", es: "Cráneo" },
+                { en: "Spine / Backbone", es: "Columna vertebral" },
+                { en: "Rib cage", es: "Caja torácica" },
+                { en: "Pelvis", es: "Pelvis" },
+                { en: "Femur / Thigh bone", es: "Fémur" },
+                { en: "Clavicle / Collarbone", es: "Clavícula" },
+                { en: "Scapula / Shoulder blade", es: "Omóplato / Escápula" },
+                { en: "Patella / Kneecap", es: "Rótula / Choquezuela" }
+            ],
+            "Urinario": [
+                { en: "Kidney", es: "Riñón" },
+                { en: "Ureter", es: "Uréter" },
+                { en: "Bladder", es: "Vejiga" },
+                { en: "Urethra", es: "Uretra" }
+            ],
+            "Reproductor": [
+                { en: "Uterus / Womb", es: "Útero / Matriz" },
+                { en: "Ovary", es: "Ovario" },
+                { en: "Fallopian Tube", es: "Trompa de Falopio" },
+                { en: "Cervix", es: "Cuello uterino / Cérvix" },
+                { en: "Prostate", es: "Próstata" },
+                { en: "Testicle", es: "Testículo" }
+            ],
+            "Sentidos": [
+                { en: "Eye", es: "Ojo" },
+                { en: "Cornea", es: "Córnea" },
+                { en: "Retina", es: "Retina" },
+                { en: "Pupil", es: "Pupila" },
+                { en: "Ear", es: "Oído / Oreja" },
+                { en: "Eardrum / Tympanic membrane", es: "Tímpano" },
+                { en: "Cochlea", es: "Cóclea" }
+            ]
+        };
+
+        function openAtlas() {
+            toggleModal('atlasModal');
+            loadAtlasSystem('Nervioso'); // Carga el sistema nervioso por defecto al abrir
+        }
+
+        function loadAtlasSystem(sys) {
+            // Resaltar el botón activo
+            document.querySelectorAll('.atlas-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white', 'border-emerald-700');
+                btn.classList.add('text-slate-700', 'dark:text-slate-300');
+            });
+            const activeBtn = document.getElementById('btn-atlas-' + sys);
+            activeBtn.classList.remove('text-slate-700', 'dark:text-slate-300');
+            activeBtn.classList.add('bg-emerald-600', 'text-white', 'border-emerald-700');
+
+            // Actualizar el título
+            document.getElementById('atlas-title').innerText = \`Órganos del \${activeBtn.innerText.replace(/[^\w\sÁÉÍÓÚáéíóúÑñ]/g, '').trim()}\`;
+
+            // Inyectar el contenido
+            const container = document.getElementById('atlas-content');
+            container.innerHTML = anatomyData[sys].map(item => \`
+                <div class="flex justify-between items-center p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg shadow-sm hover:shadow-md transition">
+                    <div class="flex flex-col">
+                        <span class="font-bold text-slate-800 dark:text-white text-base md:text-lg">\${item.en}</span>
+                        <span class="text-slate-600 dark:text-slate-400 text-sm">\${item.es}</span>
+                    </div>
+                    <button onclick="speakText('\${item.en.replace(/'/g, "\\\\'")}')" class="p-2 bg-emerald-50 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 rounded-full hover:bg-emerald-200 dark:hover:bg-emerald-800 transition shadow-sm" title="Pronunciar">
+                        🔊
+                    </button>
+                </div>
+            \`).join('');
+        }
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') { e.preventDefault(); clearSearch(); }
